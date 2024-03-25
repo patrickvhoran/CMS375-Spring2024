@@ -1,0 +1,65 @@
+Page 1 
+IntrotoHTML.php
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+		Testing Html ?
+    </title>
+</head>
+
+<body style = "text-align: center;">
+
+    <h1 style="color: green;">
+    Test Code
+</h1>
+
+</body>
+<body>
+
+<!-- Text box -->
+<input type="text" id="userInput" placeholder="Type something...">
+
+
+
+</body>
+<script>
+    function printText() {
+        // Get the value entered by the user in the text box
+        var userInput = document.getElementById("userInput").value;
+
+        // Display the value on the webpage
+        document.getElementById("output").innerHTML = userInput;
+    }
+</script>
+<button onclick="printText()">Print Text</button>
+<div id="output"></div>
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redirect Button Example</title>
+</head>
+<body>
+
+<!-- Button to direct user to a new page -->
+<a href="PatrickHoran.php"><button>Go</button></a>
+
+</body>
+</html>
+</html>
+
+Page 2
+PatrickHoran.php
+
+<<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		I am Patrick Horan
+    </title>
+</head>
+
+</html>
