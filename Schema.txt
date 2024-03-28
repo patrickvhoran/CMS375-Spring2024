@@ -1,0 +1,5 @@
+Station(underline{StationID}, StationName, Gates)
+Routes(underline{RouteID}, DepartureLocationID, ArrivalLocationID, DepartureTime, TransportType, OpenSeats, Price)
+Takes(underline{TakesID}, PassengerID, RouteID)
+Passenger(underline{PassengerID}, Username, Password)
+Bikes(underline{BikeID}, CurrentLocation, Available)
