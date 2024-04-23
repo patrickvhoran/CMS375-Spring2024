@@ -55,6 +55,7 @@
 
     .register-button {
         width: 100px; /* Set your desired width */
+        margin: 20px;
         padding: 10px; /* Add padding */
         background-color: #4CAF50; /* Set background color */
         color: white; /* Set text color */
@@ -119,7 +120,6 @@ if ($conn->connect_error) {
 
 <?php
 $username=$_GET['username'];
-
 
 // Prepare and execute query
 function load_routes($conn, $text){
@@ -335,8 +335,9 @@ if (isset($_POST['register'])) {
     </form>
 </div>
 
-<form action="account.php?username=$username" method="get">
-        <button type="submit" class="account-button">Your Account</button>
+<form action="account.php" method="get">
+    <input type="hidden" name="username" value="<?php echo $username; ?>">
+    <button type="submit" class="account-button">Your Account</button>
 </form>
 
 
