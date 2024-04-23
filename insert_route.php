@@ -63,14 +63,10 @@
 
 <body>
 
-<button class="back-button" onclick="redirectToPage()">Back</button>
+<a href="admin.php">
+    <img src="back-button.png" alt="Button Image" style="width: 30px; height: 30px">
+</a>
 
-<script>
-function redirectToPage() {
-    // Redirect to the desired page
-    window.location.href = 'admin.php';
-}
-</script>
 
     <?php
     // Database credentials
@@ -244,6 +240,7 @@ function redirectToPage() {
                 echo "<script>alert('Record created successfully');</script>";
                 // Commit transaction
                 $conn->commit();
+                
             } else {
                 echo "<script>alert('Error: " . $sql . '\\n' . $conn->error . "');</script>";
                 // Rollback transaction
@@ -255,6 +252,7 @@ function redirectToPage() {
             // Rollback transaction
             $conn->rollback();
         }
+        
 
         
 

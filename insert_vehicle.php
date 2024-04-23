@@ -85,32 +85,38 @@
     ?>
 
     <div class="form-container">
-        <h2>Add Station</h2>
-        <form method="post" id="station_form">
+        <h2>Add Vehicle</h2>
+        <form method="post" id="vehicle_form">
             
-            <label>Station Name:</label>
-            <input type="text" id = "station_name" name="station_name" placeholder=" Ex: Grand Central Station" required><br>
+            <label>Vehicle Type:</label>       
+            <select name ="trans_type">
+                <option value="">Select Vehicle</option>
+                <option value='Train'>Train</option>
+                <option value='Bus'>Bus</option>
+                <option value='Plane'>Plane</option>
+                <option value='Subway'>Subway</option>
+            </select><br>
 
-            <label>Number of Gates</label>
-            <input type="number" id="gates" name="gates" min="1" max="100" step="1">
+            <label>Capacity</label>
+            <input type="number" id="capacity" name="capacity" min="1" max="500" step="1">
             
-            <input type="submit" name="submit_station" value="Submit">
+            <input type="submit" name="submit_vehicle" value="Submit">
         </form>
     </div>
 
     <div class="form-container">
-        <h3>Delete Station</h3>
+        <h3>Delete Vehicle</h3>
             <form method="post" id="delete_form">
-                <label>Select Station</label>
-                <select name="deleted_station" required>
+                <label>Select Vehicle</label>
+                <select name="deleted_vehicle" required>
                     <option value="">----</option>
                     <?php
-                    $query = "SELECT StationID, StationName FROM Station;";
+                    $query = "SELECT VehicleID FROM Vehicle;";
                     $result = mysqli_query($conn, $query);
                     if ($result) {
                         while ($row = mysqli_fetch_assoc($result)) {
                             // Generate an option for each row
-                            echo "<option value='{$row['StationID']}'>{$row['StationName']}</option>";
+                            echo "<option value='{$row['VehicleID']}'>{$row['VehicleID']}</option>";
                         }
                     }
                     ?>
@@ -122,10 +128,10 @@
 
 
     <script>
-    document.getElementById("station_form").addEventListener("submit", function(event) {
-    var confirmation = confirm('Station:\n\n' + 
-        'Station Name: ' + document.getElementsByName('station_name')[0].value + '\n' +
-        'Gates: ' + document.getElementsByName('gates')[0].value + '\n\n' +
+    document.getElementById("vehicle_form").addEventListener("submit", function(event) {
+    var confirmation = confirm('Vehicle:\n\n' + 
+        'Vehicle Type: ' + document.getElementsByName('trans_type')[0].value + '\n' +
+        'Capacity: ' + document.getElementsByName('capacity')[0].value + '\n\n' +
         'Do you want to confirm?');
     if (!confirmation) {
         event.preventDefault();
@@ -133,8 +139,8 @@
     });
     
     document.getElementById("delete_form").addEventListener("submit", function(event) {
-    var confirmation = confirm('Please confirm that you would like to delete Station #' +
-        document.getElementsByName('deleted_station')[0].value + '.\n' +
+    var confirmation = confirm('Please confirm that you would like to delete Vehicle #' +
+        document.getElementsByName('deleted_vehicle')[0].value + '.\n' +
         'This action cannot be undone');
     if (!confirmation) {
         event.preventDefault();
@@ -144,19 +150,19 @@
 
     <?php
     // Check if station form is submitted
-    if (isset($_POST['submit_station'])) {
+    if (isset($_POST['submit_vehicle'])) {
         
         // Extract route information from the form data
-        $station_name = $_POST['station_name'];
-        $gates = $_POST['gates'];
+        $trans_type = $_POST['trans_type'];
+        $capacity = $_POST['capacity'];
         
         // Start transaction
         $conn->begin_transaction();
         
         // Execute SQL query to insert data into database
         
-        $sql = "INSERT INTO Station (StationName, Gates) 
-                VALUES ('$station_name', '$gates')";
+        $sql = "INSERT INTO Vehicle (TransportType, Capacity) 
+                VALUES ('$trans_type', $capacity);";
         
         if ($conn->query($sql) === TRUE) {
             echo "<script>alert('Record created successfully');</script>";
@@ -176,21 +182,27 @@
 
     if (isset($_POST['delete_button'])){
 
-        $stationID = $_POST['deleted_station'];
+        $vehicleID = $_POST['deleted_vehicle'];
 
-        $sql = "DELETE FROM Routes WHERE DepartureLocationID = '$stationID';";
+        $query = "SELECT RouteID FROM Drives WHERE VehicleID = '$vehicleID';";
+        $result = mysqli_query($conn, $vquery);
+        $row = mysqli_fetch_assoc($result);
 
+        
+
+        $sql = "DELETE FROM Routes WHERE RouteID = (SELECT RouteID from Drives WHERE VehicleID = '$vehicleID');";
+        echo "<p>" . $sql . "<p>";
         if ($conn->query($sql) === TRUE) {
             
             $conn->commit();
 
-            $sql2 = "DELETE FROM Routes WHERE ArrivalLocationID = '$stationID';";
+            $sql2 = "DELETE FROM Drives WHERE VehicleID = '$vehicleID';";
 
             if ($conn->query($sql2) === TRUE) {
                 // Commit transaction
                 $conn->commit();
 
-                $sql3 = "DELETE FROM Station WHERE StationID = '$stationID';";
+                $sql3 = "DELETE FROM Vehicle WHERE VehicleID = '$vehicleID';";
 
                 if ($conn->query($sql3) === TRUE) {
                     echo "<script>alert('Record successfully deleted');</script>";

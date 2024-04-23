@@ -245,14 +245,13 @@ if (isset($_POST['register'])) {
             
             if ($conn->query($query) === TRUE) {
 
-                echo "<script>alert('Registered for Route!');</script>";
-
                 // Commit transaction
                 $conn->commit();
 
                 $query2 = "UPDATE Routes SET OpenSeats = ((SELECT OpenSeats FROM Routes WHERE RouteID = '$rowId') - 1) WHERE RouteID = '$rowId'";
 
                 if ($conn->query($query2) === TRUE) {
+                    echo "<script>alert('Registered for Route!');</script>";
                     // Commit transaction
                     $conn->commit();
                 } else {
