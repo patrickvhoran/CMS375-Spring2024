@@ -53,7 +53,7 @@
         color: black; /* Example text color for header */
     }
 
-    button[type="register"] {
+    .register-button {
         width: 100px; /* Set your desired width */
         padding: 10px; /* Add padding */
         background-color: #4CAF50; /* Set background color */
@@ -64,7 +64,7 @@
     }
 
     /* Hover style for the buttons */
-    button[type="register"]:hover {
+    .register-button:hover {
         background-color: #45a049; /* Change background color on hover */
     }
 
@@ -130,7 +130,7 @@ function load_routes($conn, $text){
 
     if ($result) {
         // Display column names
-        echo "<form id='registrationForm' action='' method='post'>";
+        echo "<form id='registrationForm' method='post'>";
         echo "<table id='myTable' border='1' style='margin: auto;'>";
         echo "<tr>";
         echo "<th></th>";
@@ -155,7 +155,7 @@ function load_routes($conn, $text){
             echo "</tr>";
         }
         echo "</table>";
-        echo "<button type='register' name='register'>Register</button>";
+        echo "<button type='submit' class='register-button' name='register'>Register</button>";
         echo "</form>";
 
     } else {
@@ -246,11 +246,22 @@ if (isset($_POST['register'])) {
             if ($conn->query($query) === TRUE) {
 
                 echo "<script>alert('Registered for Route!');</script>";
+
                 // Commit transaction
                 $conn->commit();
-                
+
+                $query2 = "UPDATE Routes SET OpenSeats = ((SELECT OpenSeats FROM Routes WHERE RouteID = '$rowId') - 1) WHERE RouteID = '$rowId'";
+
+                if ($conn->query($query2) === TRUE) {
+                    // Commit transaction
+                    $conn->commit();
+                } else {
+                    echo "<script>alert('Error: " . $query2 . '\\n' . $conn->error . "');</script>";
+                    // Rollback transaction
+                    $conn->rollback();
+                }
             } else {
-                echo "<script>alert('Error: " . $sql . '\\n' . $conn->error . "');</script>";
+                echo "<script>alert('Error: " . $query . '\\n' . $conn->error . "');</script>";
                 // Rollback transaction
                 $conn->rollback();
             }
@@ -269,7 +280,7 @@ if (isset($_POST['register'])) {
 
 <div class="filters">
     <p>Filters</p>
-    <form action="" method="post" id="filters">
+    <form method="post" id="filters">
 
         <label>Date:</label>
         <input type="date" id="date" name="date">
