@@ -52,6 +52,48 @@
         background-color: #f0f0f0; /* Example background color for header */
         color: black; /* Example text color for header */
     }
+
+    button[type="register"] {
+        width: 100px; /* Set your desired width */
+        padding: 10px; /* Add padding */
+        background-color: #4CAF50; /* Set background color */
+        color: white; /* Set text color */
+        border: none; /* Remove border */
+        border-radius: 5px; /* Add border radius */
+        cursor: pointer; /* Add cursor style */
+    }
+
+    /* Hover style for the buttons */
+    button[type="register"]:hover {
+        background-color: #45a049; /* Change background color on hover */
+    }
+
+    /* Style for the button */
+    .account-button {
+            background-color: #42cbf5; 
+            text-align: right;
+            color: black; /* White text color */
+            padding: 10px 20px; /* Padding around the text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Cursor on hover */
+            position: fixed; /* Fixed position */
+            top: 20px; /* Distance from the top */
+            right: 20px; /* Distance from the right */
+            height: 75px;
+            width: 8%;
+            background-image: url('account-image.png'); /* Path to your image */
+            background-size: 25%; /* Adjust the image size */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-position: left; /* Center the image */
+            background-origin: content-box;
+        }
+
+        /* Style for the button on hover */
+        .account-button:hover {
+            background-color: #267891; /* Darker green background color */
+        }
+
     </style>
 
 </head>
@@ -76,6 +118,9 @@ if ($conn->connect_error) {
 ?>
 
 <?php
+$username=$_GET['username'];
+
+
 // Prepare and execute query
 function load_routes($conn, $text){
     
@@ -110,7 +155,7 @@ function load_routes($conn, $text){
             echo "</tr>";
         }
         echo "</table>";
-        echo "<button type='submit' name='register'>Register</button>";
+        echo "<button type='register' name='register'>Register</button>";
         echo "</form>";
 
     } else {
@@ -178,6 +223,7 @@ if (isset($_POST['apply_filter'])) {
         $text .= " WHERE " . implode(" AND ", $filters);
         #echo "<p>" . $text . "<p>";
         load_routes($conn, $text);
+        
     } else {
         $text = "select s1.StationName as DepartureLocation, s2.StationName as ArrivalLocation, r.DepartureTime, r.TransportType, r.OpenSeats, r.Price, r.RouteID from routes r right join station s1 on r.DepartureLocationID = s1.StationID right join station s2 on r.ArrivalLocationID = s2.StationID";
         load_routes($conn, $text);
@@ -195,16 +241,26 @@ if (isset($_POST['register'])) {
         // Loop through selected rows
         foreach ($_POST['row'] as $rowId) {
             
-            // PERFORM SQL to register passenger here
-            // Call your PHP function or perform any desired action for each selected row
-            echo '<p>' . $rowId . '<p>';
-            // You can call your PHP function here for each selected row
-            // Example: processRow($rowId);
+            $query = "INSERT INTO Takes (PassengerID, RouteID) VALUES ((SELECT PassengerID FROM Passenger WHERE username ='$username'),'$rowId')";
+            
+            if ($conn->query($query) === TRUE) {
+
+                echo "<script>alert('Registered for Route!');</script>";
+                // Commit transaction
+                $conn->commit();
+                
+            } else {
+                echo "<script>alert('Error: " . $sql . '\\n' . $conn->error . "');</script>";
+                // Rollback transaction
+                $conn->rollback();
+            }
         }
+
     } else {
         echo 'No rows selected.';
     }
 }
+
 
 // Close connection
 
@@ -269,7 +325,10 @@ if (isset($_POST['register'])) {
     </form>
 </div>
 
-            
+<form action="account.php?username=$username" method="get">
+        <button type="submit" class="account-button">Your Account</button>
+</form>
+
 
 
 </body>
