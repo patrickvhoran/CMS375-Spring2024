@@ -72,6 +72,7 @@ function redirectToPage() {
 }
 </script>
 
+
     <?php
     // Database credentials
     $servername = "localhost";
@@ -89,88 +90,32 @@ function redirectToPage() {
     ?>
 
     <div class="form-container">
-        <h2>Add Route</h2>
-        <form method="post" id="route_form">
+        <h2>Add Station</h2>
+        <form method="post" id="station_form">
             
-            <select name="dep_stat_id" required>
-                <option value="">Select Departure Location</option>
-                <?php
-                $query = "SELECT StationID, StationName FROM Station;";
-                $result = mysqli_query($conn, $query);
-                if ($result) {
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        // Generate an option for each row
-                        echo "<option value='{$row['StationID']}'>{$row['StationName']}</option>";
-                    }
-                }
-                ?>
-            </select><br>
+            <label>Station Name:</label>
+            <input type="text" id = "station_name" name="station_name" placeholder=" Ex: Grand Central Station" required><br>
 
+            <label>Number of Gates</label>
+            <input type="number" id="gates" name="gates" min="1" max="100" step="1">
             
-            <select name="arr_stat_id" required>
-                <option value="">Select Arrival Location</option>
-                <?php
-                $query = "SELECT StationID, StationName FROM Station;";
-                $result = mysqli_query($conn, $query);
-                if ($result) {
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        // Generate an option for each row
-                        echo "<option value='{$row['StationID']}'>{$row['StationName']}</option>";
-                    }
-                }
-                ?>
-            </select><br>
-
-            <label for="date">Choose a date:</label>
-            <input type="date" id="date" name="date" required>
-            <br>
-
-            <label for="time">Choose a time:</label>
-            <input type="time" id="time" name="time" required>
-            <br>
-
-            <select name ="vehicle" required>
-            <option value="">Select Vehicle</option>
-                <?php
-                $query = "SELECT VehicleID FROM Vehicle;";
-                $result = mysqli_query($conn, $query);
-                if ($result) {
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        // Generate an option for each row
-                        echo "<option value='{$row['VehicleID']}'>{$row['VehicleID']}</option>";
-                    }
-                }
-                ?>
-            </select><br>
-            
-
-            <select id="price" name="price" required>
-                <option value="">Price</option>
-                <!-- Generate options for integers from 1 to 10 -->
-                    <?php
-                    for ($i = 10; $i <= 500; $i+=10) {
-                        echo "<option value='{$i}'>{$i}</option>";
-                    }
-                    ?> 
-            </select>
-            
-            <input type="submit" name="submit_route" value="Submit">
+            <input type="submit" name="submit_station" value="Submit">
         </form>
     </div>
 
     <div class="form-container">
-        <h3>Delete Route</h3>
+        <h3>Delete Station</h3>
             <form method="post" id="delete_form">
-                <label>Select Route</label>
-                <select name="deleted_route" required>
+                <label>Select Station</label>
+                <select name="deleted_station" required>
                     <option value="">----</option>
                     <?php
-                    $query = "SELECT RouteID FROM Routes;";
+                    $query = "SELECT StationID, StationName FROM Station;";
                     $result = mysqli_query($conn, $query);
                     if ($result) {
                         while ($row = mysqli_fetch_assoc($result)) {
                             // Generate an option for each row
-                            echo "<option value='{$row['RouteID']}'>{$row['RouteID']}</option>";
+                            echo "<option value='{$row['StationID']}'>{$row['StationName']}</option>";
                         }
                     }
                     ?>
@@ -182,13 +127,10 @@ function redirectToPage() {
 
 
     <script>
-    document.getElementById("route_form").addEventListener("submit", function(event) {
-    var confirmation = confirm('Route Information:\n\n' + 
-        'Departure Location: ' + document.getElementsByName('dep_stat_id')[0].value + '\n' +
-        'Arrival Location: ' + document.getElementsByName('arr_stat_id')[0].value + '\n' +
-        'Date & Time: ' + document.getElementById('date').value + ' ' + document.getElementById('time').value + '\n' +
-        'Vehicle: ' + document.getElementsByName('vehicle')[0].value + '\n' +
-        'Price: ' + document.getElementById('price').value + '\n\n' +
+    document.getElementById("station_form").addEventListener("submit", function(event) {
+    var confirmation = confirm('Station:\n\n' + 
+        'Station Name: ' + document.getElementsByName('station_name')[0].value + '\n' +
+        'Gates: ' + document.getElementsByName('gates')[0].value + '\n\n' +
         'Do you want to confirm?');
     if (!confirmation) {
         event.preventDefault();
@@ -207,48 +149,25 @@ function redirectToPage() {
 
     <?php
     // Check if station form is submitted
-    if (isset($_POST['submit_route'])) {
+    if (isset($_POST['submit_station'])) {
         
         // Extract route information from the form data
-        $dep_stat_id = $_POST['dep_stat_id'];
-        $arr_stat_id = $_POST['arr_stat_id'];
-        $datetime = $_POST['date'] . ' ' . $_POST['time'];
-        $vehicle = $_POST['vehicle'];
-        $price = $_POST['price'];
-        
-        
-        $vquery = "SELECT * FROM Vehicle WHERE VehicleID = '$vehicle';";
-        
-        $result = mysqli_query($conn, $vquery);
-
-        $row = mysqli_fetch_assoc($result);
-        $open_seats = $row['Capacity'] - $row['Passengers'];
-        $trans_type = $row['TransportType'];
+        $station_name = $_POST['station_name'];
+        $gates = $_POST['gates'];
         
         // Start transaction
         $conn->begin_transaction();
         
         // Execute SQL query to insert data into database
         
-        $sql = "INSERT INTO Routes (DepartureLocationID, ArrivalLocationID, DepartureTime, TransportType, OpenSeats, price) 
-                VALUES ('$dep_stat_id', '$arr_stat_id', '$datetime', '$trans_type', '$open_seats', '$price')";
+        $sql = "INSERT INTO Station (StationName, Gates) 
+                VALUES ('$station_name', '$gates')";
         
         if ($conn->query($sql) === TRUE) {
+            echo "<script>alert('Record created successfully');</script>";
             // Commit transaction
             $conn->commit();
 
-            $sql2 = "INSERT INTO Drives (RouteID, VehicleID) 
-                    VALUES ((SELECT MAX(RouteID) FROM Routes),'$vehicle')";
-
-            if ($conn->query($sql2) === TRUE) {
-                echo "<script>alert('Record created successfully');</script>";
-                // Commit transaction
-                $conn->commit();
-            } else {
-                echo "<script>alert('Error: " . $sql . '\\n' . $conn->error . "');</script>";
-                // Rollback transaction
-                $conn->rollback();
-            }
 
         } else {
             echo "<script>alert('Error: " . $sql . '\\n' . $conn->error . "');</script>";
@@ -262,22 +181,22 @@ function redirectToPage() {
 
     if (isset($_POST['delete_button'])){
 
-        $routeID = $_POST['deleted_route'];
+        $stationID = $_POST['deleted_station'];
         
 
-        $sql = "DELETE FROM Drives WHERE RouteID = '$routeID';";
+        $sql = "DELETE FROM Routes WHERE DepartureStationID = '$stationID';";
         
         if ($conn->query($sql) === TRUE) {
             
             $conn->commit();
 
-            $sql2 = "DELETE FROM Takes WHERE RouteID = '$routeID';";
+            $sql2 = "DELETE FROM Route WHERE ArrivalStationID = '$stationID';";
             
             if ($conn->query($sql2) === TRUE) {
                 // Commit transaction
                 $conn->commit();
 
-                $sql3 = "DELETE FROM Routes WHERE RouteID = '$routeID';";
+                $sql3 = "DELETE FROM Station WHERE StationID = '$stationID';";
                 
                 if ($conn->query($sql3) === TRUE) {
                     echo "<script>alert('Record successfully deleted');</script>";

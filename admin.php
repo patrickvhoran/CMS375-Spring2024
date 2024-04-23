@@ -15,17 +15,17 @@
     
     <!-- Button to login page -->
     <form action="insert_route.php" method="get">
-        <button type="submit">Insert Route</button>
+        <button type="submit">Manage Routes</button>
     </form>
     
     <!-- Button to create account page -->
     <form action="insert_vehicle.php" method="get">
-        <button type="submit">Insert Vehicle</button>
+        <button type="submit">Manage Vehicles</button>
     </form>
 
     <!-- Button to admin page -->
     <form action="insert_station.php" method="get">
-        <button type="submit">Insert Route</button>
+        <button type="submit">Manage Stations</button>
     </form>
 </body>
 
