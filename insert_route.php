@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Form</title>
+    <title>Insert Route</title>
     <style>
         /* Style for the form container */
         .form-container {
@@ -302,7 +302,7 @@
         }
 
     }
-    
+
 
     // Close connection
     $conn->close();
