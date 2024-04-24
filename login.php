@@ -6,45 +6,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Form</title>
     <style>
-        /* Style for the form container */
-        .form-container {
-            width: 300px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #f9f9f9;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        /* Style for the form inputs */
-        .form-container input[type=text] {
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
             width: 100%;
             padding: 10px;
-            margin: 5px 0;
+            margin: 10px 0;
             box-sizing: border-box;
             border: 1px solid #ccc;
-            border-radius: 3px;
+            border-radius: 4px;
+            font-size: 16px;
         }
 
-        /* Style for the submit button */
-        .form-container input[type=submit] {
+        .login-form input[type="submit"] {
             width: 100%;
             padding: 10px;
             margin-top: 10px;
             box-sizing: border-box;
             border: none;
-            border-radius: 3px;
-            background-color: #4CAF50;
-            color: white;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
             cursor: pointer;
         }
 
-        /* Style for the submit button on hover */
-        .form-container input[type=submit]:hover {
-            background-color: #45a049;
+        .login-form input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .login-form p {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .login-form p a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .login-form p a:hover {
+            text-decoration: underline;
+        }
+
+        .image-container {
+            position: absolute;
+            top: 150px;
+
+            margin: auto;
+            width: 300px; /* Adjust the width as needed */
+            height: auto; /* This will maintain the aspect ratio */
         }
     </style>
+        
 </head>
 
 <body>
@@ -86,14 +124,19 @@
     }
     ?>
 
+<img src="https://fdotwww.blob.core.windows.net/sitefinity/images/default-source/content1/info/logo/png/fdot_logo_color.png?sfvrsn=293c15a8_2" alt="Logo" class="image-container">
+
+<div class="login-container">
     <!-- HTML form -->
-    <form action="" method="post">
+    <form class="login-form" action="" method="post">
         <label>Username:</label>
         <input type="text" name="username" required><br>
         <label>Password:</label>
         <input type="password" name="password" required><br>
         <input type="submit" name="login" value="Login">
     </form>
+
+</div>
 
 </body>
 </html>
