@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Testing HTML</title>
+    <title>Home Page</title>
     <style>
     .filters {
         position: absolute;
