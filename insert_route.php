@@ -302,6 +302,7 @@
         }
 
     }
+    
 
     // Close connection
     $conn->close();
