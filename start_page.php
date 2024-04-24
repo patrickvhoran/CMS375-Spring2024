@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Form</title>
+    <title>Start Page</title>
     <style>
     /* Add styles for the blue banner */
     .blue-banner {
@@ -19,7 +19,7 @@
         text-align: center;
         margin: 20px 0;
     }
-    
+
     button {
         font-size: 1.5em; /* Make buttons 3 times bigger */
         background-color: 

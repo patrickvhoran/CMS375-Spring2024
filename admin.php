@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Form</title>
+    <title>Admin</title>
     <style>
     /* Add styles for the blue banner */
     .blue-banner {
