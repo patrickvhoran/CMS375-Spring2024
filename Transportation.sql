@@ -1,4 +1,4 @@
--- Worked on by Ryan and Edward concurrently
+-- Worked on by Ryan Patrick and Edward concurrently
 
 drop database if exists transport;
 create database if not exists transport;
